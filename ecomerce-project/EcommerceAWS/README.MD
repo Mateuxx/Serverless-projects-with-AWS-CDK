@@ -73,3 +73,10 @@ cdk init --language typescript
 - Agrupando logs de vários recursos ao mesmo tempo
 - Posso pegar vários logs de vários logs groups e telos como resultado 
 - ![alt text](image-1.png)
+
+## Arquiquetura bem dividida
+
+### Gerenciamento de Produtos
+
+![alt text](image-2.png)
+pr
