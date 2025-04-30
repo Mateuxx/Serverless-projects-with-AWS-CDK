@@ -4,6 +4,7 @@ import {
   Context,
 } from "aws-lambda";
 
+// this is the lambda handler
 export async function handler(
   event: APIGatewayProxyEvent,
   context: Context

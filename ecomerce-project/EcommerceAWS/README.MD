@@ -21,25 +21,34 @@
 
 ## Lambda 
 
-- funções que são executados por um trigger a partir de um trigger
+- funções que são executados a partir de um trigger
 - Excução em runtime
 - Custo é cobrado
   - tempo de execução
   - memoria consumida
-- ***otimizações para isso é prioridade***
+- ***otimizações devem ser feitas para os requisitos acima***
+
+### Lambdas Layers
+
+- Recursos, pedaços de codigos e libs que podem ser podemo ser compartilhadas com varias outras funções lambdas.
+- Colocando esses recursos compartilhados podemos temos que as funções ficam menores
+  - melhorando desempenho
+  - cold start otimizado e afins
 
 ### AWS API GATEWAY 
 
 - colocamos na frente de serviços que expoe APIS para o mundo externo
-  - endpoit para ser consumido alguem CLIENT
-- validação de requests
+  - endpoit para ser consumido algum CLIENT
+- validação de requests como:
   - URI
-  - HTTP
+  - Verbos HTTP
   - payloads (body)
 - Custo:
   - por requisição
   - e dados requeridos
   - mto mais barato que fazer direto
+- Bloqueio de requisições que nossa infra não trata
+  - ja eh bloqueado pela API gateway
 
 
 ## CDK 
@@ -52,4 +61,15 @@ cdk init --language typescript
 
 ### CDK WORKFLOW
 
-- CODE IN CDK -> CLOUDFORMATION TEMPLATE  -> RESOURCES CREATION AND ETC.
+- CODE IN CDK -> CLOUDFORMATION TEMPLATE -> RESOURCES CREATION AND ETC.
+
+## Logs do cloudwatch e depuração pelo console da AWS
+
+- modulo 6 do curso (para consultar depois)
+- 31 a 34
+
+### Logs Insights
+
+- Agrupando logs de vários recursos ao mesmo tempo
+- Posso pegar vários logs de vários logs groups e telos como resultado 
+- ![alt text](image-1.png)
