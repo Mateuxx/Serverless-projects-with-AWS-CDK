@@ -4,11 +4,13 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as lambdaNodeJS from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 
+//stack related to the products resources 
 export class ProductsAppStack extends Stack {
   // referencia da lambda dentro dessa stack
   //exportar função para usar em outra stack ou passa por uma api gateway (o que é o que queremos aqui!!!)
   readonly prodructsFetchHandler: lambdaNodeJS.NodejsFunction;
-
+  //nova função lambda para as paradas de
+  readonly prodructsAdminHandler: lambdaNodeJS.NodejsFunction;
   readonly productsDdb: Table;
 
   // scope - onde vai ser inserido
@@ -51,7 +53,32 @@ export class ProductsAppStack extends Stack {
         },
       }
     );
+
     //permitir que a tabela possa ser lida por prodructsFetchHandler
     this.productsDdb.grantReadData(this.prodructsFetchHandler);
+
+    //lambda pra admin
+    this.prodructsAdminHandler = new lambdaNodeJS.NodejsFunction(
+      this,
+      "ProductsAdminFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        functionName: "ProductsAdminFunction",
+        entry: "lambda/products/productsAdminFunction.ts", //caminho de aonde está a minha lambda de fatoo
+        handler: "handler",
+        memorySize: 512, // memoria que a funcção lamda tem que ter
+        timeout: Duration.seconds(5),
+        bundling: {
+          minify: true, //deixar a função lambda mais otimizada possivel
+          sourceMap: false,
+        },
+        //pegar o nome da tabela por .env
+        environment: {
+          PRODUCTS_DDB: this.productsDdb.tableName,
+        },
+      }
+    );
+    //permissões apenas para escrita
+    this.productsDdb.grantWriteData(this.prodructsAdminHandler);
   }
 }

@@ -23,8 +23,10 @@ const productsAppStack = new ProductsAppStack(app, "ProductsAppStack", {
   env: env,
 });
 
+// create the api gateway stack
 const apiGatewayStack = new EcommerceApiStack(app, "EcommerceApiStack", {
   productsFetchHanlder: productsAppStack.prodructsFetchHandler, // passando a instancia da função handler
+  productsAdminHanlder: productsAppStack.prodructsAdminHandler,
   tags: tags,
   env: env,
 });

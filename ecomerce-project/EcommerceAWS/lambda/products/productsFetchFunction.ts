@@ -15,9 +15,10 @@ export async function handler(
 
   // see on the cloudwatch
   // gera custo na função lambda - cuidado com os logs - latencia e tals
-  console.log(
+  console
+    .log
     // `API Gateway Request ID ${apiRequestID} - Lambda Request ID: ${lambdaRequestId}`
-  );
+    ();
   const mehtod = event.httpMethod;
   if (event.resource === "/products") {
     if (mehtod === "GET") {
@@ -28,6 +29,13 @@ export async function handler(
       body: JSON.stringify({
         message: "GET products - OK",
       }),
+    };
+  } else if (event.resource === `/products{id}`) {
+    const productId = event.pathParameters!.id as string;
+    console.log(` GET /products/${productId}`);
+    return {
+      statusCode: 200,
+      body: ` GET /products/${productId}`,
     };
   }
 

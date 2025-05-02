@@ -10,8 +10,11 @@ import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
 
 //para acessar a lambda de produtos
+// interface -> para poder colocaarmos propriedades alem do que StackProps ja possui no caso as lambdas
+// para poder fazermos as integrações
 interface EcommerceApiStackProps extends StackProps {
   productsFetchHanlder: lambdaNodeJS.NodejsFunction;
+  productsAdminHanlder: lambdaNodeJS.NodejsFunction;
 }
 
 export class EcommerceApiStack extends Stack {
@@ -43,13 +46,33 @@ export class EcommerceApiStack extends Stack {
     });
 
     //cria a integração da api gateway com a lambda de products
-    // assim que nos configuramos a api gateway para invocar
+    // assim que nos configuramos a api gateway para invocar a lambda que queremos
     const productsFechtIntegration = new LambdaIntegration(
       props.productsFetchHanlder
     );
 
-    //"/produtcs"
+    // integração para a lambda de admin
+    const prodructsAdminIntegration = new LambdaIntegration(
+      props.productsAdminHanlder
+    );
+
+    //"/produtcs" // cria o resource na lambda de products
     const productsResource = apiGateway.root.addResource("products");
-    productsResource.addMethod("GET", productsFechtIntegration);
+    // pego o productsResource que ja tem o get e add o /{id}
+    const procuctIdResource = productsResource.addResource("{id}");
+
+    productsResource.addMethod("GET", productsFechtIntegration); // calls the user fetch lambda handler
+
+    // GET /products/{id}
+    procuctIdResource.addMethod("GET", productsFechtIntegration);
+
+    // POST /produtcs - by admin stuff
+    productsResource.addMethod("POST", prodructsAdminIntegration);
+
+    // PUT /products/{id}
+    procuctIdResource.addMethod("PUT", prodructsAdminIntegration);
+
+    // DELETE /products{id}
+    procuctIdResource.addMethod("DELETE", prodructsAdminIntegration);
   }
 }

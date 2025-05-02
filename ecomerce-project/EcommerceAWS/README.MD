@@ -79,4 +79,9 @@ cdk init --language typescript
 ### Gerenciamento de Produtos
 
 ![alt text](image-2.png)
-pr
+
+### Pq usar diferentes lambdas? se tratando de produtos? 
+
+- user apenas vão fazer operações de get
+- admin pode fazer mtas mais operações porem com mto menos frequencia do que um usuario
+
