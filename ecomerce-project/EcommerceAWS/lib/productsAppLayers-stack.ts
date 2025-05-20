@@ -10,18 +10,19 @@ export class ProductsAppLayersStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    //layer infra 
+    //ProductsLayer - layer para as lambdas relacionadas aos products
     this.productsLayers = new LayerVersion(this, "ProductsLayer", {
       code: Code.fromAsset("lambda/products/layers/productsLayer"), // onde vai estar a layer
       compatibleRuntimes: [Runtime.NODEJS_20_X],
       layerVersionName: "ProductsLayer",
       removalPolicy: RemovalPolicy.RETAIN,
     });
-    //O SSM Parameter Store é uma maneira centralizada de armazenar e compartilhar o ARN da layer entre diferentes stacks ou serviços.
-    new StringParameter(this, "ProductsLayerVersionArn", {
-        parameterName: "ProductsLayerVersionArn",
-        stringValue: this.productsLayers.layerVersionArn
-    })
 
+    //O SSM Parameter Store é uma maneira centralizada de armazenar e compartilhar o ARN da layer entre diferentes stacks ou serviços.
+    //Aqui eu estou colocando a layer dentro do
+    new StringParameter(this, "ProductsLayerVersionArn", {
+      parameterName: "ProductsLayerVersionArn",
+      stringValue: this.productsLayers.layerVersionArn,
+    });
   }
 }

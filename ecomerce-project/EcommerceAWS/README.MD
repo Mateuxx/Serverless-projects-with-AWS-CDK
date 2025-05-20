@@ -85,3 +85,11 @@ cdk init --language typescript
 - user apenas vão fazer operações de get
 - admin pode fazer mtas mais operações porem com mto menos frequencia do que um usuario
 
+## SSM Parameter Store 
+
+- Um lugar seguro para guardar vários tipos de informações dentro da AWS.
+
+## ARN (Amazon Resource Name)
+
+- Identificador único de qualquer recurso dentro da AWS
+- id de um lambda, nome de um bucket

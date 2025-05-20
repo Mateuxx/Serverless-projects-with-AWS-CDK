@@ -2,9 +2,10 @@ import { Duration, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AttributeType, BillingMode, Table } from "aws-cdk-lib/aws-dynamodb";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as lambdaNodeJS from "aws-cdk-lib/aws-lambda-nodejs";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
-//stack related to the products resources 
+//stack related to the products resources
 export class ProductsAppStack extends Stack {
   // referencia da lambda dentro dessa stack
   //exportar função para usar em outra stack ou passa por uma api gateway (o que é o que queremos aqui!!!)
@@ -32,6 +33,18 @@ export class ProductsAppStack extends Stack {
       writeCapacity: 1,
     });
 
+    // trazer o layer para essa stack de produtos
+    const productsLayersArn = StringParameter.valueForStringParameter(
+      this,
+      "ProductsLayersArn"
+    );
+    // Ai como a cada deply muda a versão da layer vc nao precisa ir mudar manualmente na criação da layer
+    const productsLayer = lambda.LayerVersion.fromLayerVersionArn(
+      this,
+      "ProductsLayerVersionArn",
+      productsLayersArn
+    );
+
     //criação da lambda products
     this.prodructsFetchHandler = new lambdaNodeJS.NodejsFunction(
       this,
@@ -51,6 +64,7 @@ export class ProductsAppStack extends Stack {
         environment: {
           PRODUCTS_DDB: this.productsDdb.tableName,
         },
+        layers: [productsLayer], // pode buscar trechos de código por esse layer
       }
     );
 
@@ -76,6 +90,7 @@ export class ProductsAppStack extends Stack {
         environment: {
           PRODUCTS_DDB: this.productsDdb.tableName,
         },
+        layers: [productsLayer],
       }
     );
     //permissões apenas para escrita
