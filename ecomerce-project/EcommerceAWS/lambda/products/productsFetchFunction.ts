@@ -3,8 +3,19 @@ import {
   APIGatewayProxyResult,
   Context,
 } from "aws-lambda";
+import { error } from "console";
+import { ProductsRepository } from "./layers/productsLayer/productRepository";
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
-// this is the lambda handler
+//dynamo dbClient
+const ddbClient = new DocumentClient();
+//pegar do .env o nome do dynamoDb
+const productsDb = process.env.PRODUCTS_DB!;
+
+//productRepository - import from layer
+const productsRepository = new ProductsRepository(ddbClient, productsDb);
+
+// this is the lambda handler for handle fetch products operations
 export async function handler(
   event: APIGatewayProxyEvent,
   context: Context
@@ -13,30 +24,44 @@ export async function handler(
   // const lambdaRequestId = context.awsRequestId;
   // const apiRequestID = event.requestContext.re;
 
-  // see on the cloudwatch
+  // see on the cloudwatch!!
   // gera custo na função lambda - cuidado com os logs - latencia e tals
-  console
-    .log
-    // `API Gateway Request ID ${apiRequestID} - Lambda Request ID: ${lambdaRequestId}`
-    ();
+
   const mehtod = event.httpMethod;
   if (event.resource === "/products") {
     if (mehtod === "GET") {
-      console.log("GET");
+      console.log("GET/products");
+
+      //get all the products from dynamoDb
+      const products = productsRepository.getAllProducts();
+
+      return {
+        statusCode: 200, //OK
+        body: JSON.stringify(products),
+      };
     }
-    return {
-      statusCode: 200, //OK
-      body: JSON.stringify({
-        message: "GET products - OK",
-      }),
-    };
   } else if (event.resource === `/products{id}`) {
     const productId = event.pathParameters!.id as string;
+
     console.log(` GET /products/${productId}`);
-    return {
-      statusCode: 200,
-      body: ` GET /products/${productId}`,
-    };
+
+    //podemos nao encontrar um produto, portanto precisamos de um tratamento de erros
+    try {
+      const product = productsRepository.getProductById(productId);
+
+      return {
+        statusCode: 200, //ok retornou
+        body: JSON.stringify(product),
+      };
+    } catch (error) {
+      console.error((<Error>error).message);
+
+    //retornar not found(404) caso n de certo
+      return {
+        statusCode: 404, //not found
+        body: (<Error>error).message,
+      };
+    }
   }
 
   return {
