@@ -10,7 +10,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 //dynamo dbClient
 const ddbClient = new DocumentClient();
 //pegar do .env o nome do dynamoDb
-const productsDb = process.env.PRODUCTS_DB!;
+const productsDb = process.env.PRODUCTS_DDB!;
 
 //productRepository - import from layer
 const productsRepository = new ProductsRepository(ddbClient, productsDb);

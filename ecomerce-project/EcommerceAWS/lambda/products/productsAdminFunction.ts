@@ -1,19 +1,18 @@
+import { DynamoDB } from "aws-sdk";
 import {
   APIGatewayProxyEvent,
   APIGatewayProxyResult,
   Context,
 } from "aws-lambda";
-import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 import {
   Product,
   ProductsRepository,
 } from "./layers/productsLayer/productRepository";
 
-//TODO - essas constantes/imports nao parecem ser a melhor coisa, pode haver um jeito melhor?
 //dynamo dbClient
-const ddbClient = new DocumentClient();
+const ddbClient = new DynamoDB.DocumentClient();
 //pegar do .env o nome do dynamoDb
-const productsDb = process.env.PRODUCTS_DB!;
+const productsDb = process.env.PRODUCTS_DDB!;
 //productRepository - import from layer
 const productsRepository = new ProductsRepository(ddbClient, productsDb);
 
@@ -33,7 +32,7 @@ export async function handler(
         const productData = JSON.parse(event.body!);
         const product = productData as Product; //Trasnforma esse objeto no tipo da interface Product
 
-        const productCreated = productsRepository.create(product);
+        const productCreated = await productsRepository.create(product);
 
         return {
           statusCode: 201, //created this is for created
@@ -79,7 +78,9 @@ export async function handler(
       const productId = event.pathParameters!.id as string;
       console.log(` DELETE /products/${productId}`);
       try {
-        const deletedProduct = productsRepository.deleteProduct(productId);
+        const deletedProduct = await productsRepository.deleteProduct(
+          productId
+        );
 
         return {
           statusCode: 200,

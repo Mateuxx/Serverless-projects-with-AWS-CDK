@@ -36,10 +36,10 @@ export class ProductsAppStack extends Stack {
     // trazer o layer para essa stack de produtos
     const productsLayersArn = StringParameter.valueForStringParameter(
       this,
-      "ProductsLayersArn"
+      "ProductsLayerVersionArn"
     );
     // Ai como a cada deply muda a versão da layer vc nao precisa ir mudar manualmente na criação da layer
-    const productsLayer = lambda.LayerVersion.fromLayerVersionArn(
+    const productsLayers = lambda.LayerVersion.fromLayerVersionArn(
       this,
       "ProductsLayerVersionArn",
       productsLayersArn
@@ -64,7 +64,7 @@ export class ProductsAppStack extends Stack {
         environment: {
           PRODUCTS_DDB: this.productsDdb.tableName,
         },
-        layers: [productsLayer], // pode buscar trechos de código por esse layer
+        layers: [productsLayers], // pode buscar trechos de código por esse layer
       }
     );
 
@@ -90,7 +90,7 @@ export class ProductsAppStack extends Stack {
         environment: {
           PRODUCTS_DDB: this.productsDdb.tableName,
         },
-        layers: [productsLayer],
+        layers: [productsLayers],
       }
     );
     //permissões apenas para escrita

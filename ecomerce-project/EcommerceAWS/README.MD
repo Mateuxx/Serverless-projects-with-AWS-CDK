@@ -59,6 +59,19 @@
 cdk init --language typescript
 ```
 
+### CDK deploy sem interrupção de approval
+
+```bash
+ cdk deploy --all --require-approval never 
+ ```
+
+### Diferenças do que mudou com o deploy nas stacks e afins
+
+```bash
+ cdk diff
+ ```
+
+
 ### CDK WORKFLOW
 
 - CODE IN CDK -> CLOUDFORMATION TEMPLATE -> RESOURCES CREATION AND ETC.
