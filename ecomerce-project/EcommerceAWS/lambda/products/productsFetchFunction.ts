@@ -26,14 +26,13 @@ export async function handler(
 
   // see on the cloudwatch!!
   // gera custo na função lambda - cuidado com os logs - latencia e tals
-
   const mehtod = event.httpMethod;
   if (event.resource === "/products") {
     if (mehtod === "GET") {
       console.log("GET/products");
 
       //get all the products from dynamoDb
-      const products = productsRepository.getAllProducts();
+      const products = await productsRepository.getAllProducts();
 
       return {
         statusCode: 200, //OK
@@ -47,7 +46,7 @@ export async function handler(
 
     //podemos nao encontrar um produto, portanto precisamos de um tratamento de erros
     try {
-      const product = productsRepository.getProductById(productId);
+      const product = await productsRepository.getProductById(productId);
 
       return {
         statusCode: 200, //ok retornou
@@ -56,7 +55,7 @@ export async function handler(
     } catch (error) {
       console.error((<Error>error).message);
 
-    //retornar not found(404) caso n de certo
+      //retornar not found(404) caso n ache o produto
       return {
         statusCode: 404, //not found
         body: (<Error>error).message,

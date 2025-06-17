@@ -47,7 +47,7 @@ export class ProductsRepository {
     if (productResult.Item) {
       return productResult.Item as Product;
     } else {
-      throw new Error("Product not fou");
+      throw new Error("Product not found");
     }
   }
   //create product
