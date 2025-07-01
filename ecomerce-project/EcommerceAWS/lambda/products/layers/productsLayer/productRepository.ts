@@ -9,6 +9,7 @@ export interface Product {
   code: string;
   price: string;
   model: string;
+  productUrl: string;
 }
 
 //classe de repository de produtos - para fazer as operações de acesso e tudo mais
@@ -95,13 +96,14 @@ export class ProductsRepository {
         ReturnValues: "UPDATED_NEW",
         //query que eu vou atualizar as coisas de fato
         UpdateExpression:
-          "set productName = :n, code = :c, price = :p, model = :m",
+          "set productName = :n, code = :c, price = :p, model = :m, productUrl = :u",
         //o que essas expressões vão receber mesmo de fato
         ExpressionAttributeValues: {
           ":n": product.productName,
           ":c": product.code,
           ":p": product.price,
           ":m": product.model,
+          ":u": product.productUrl,
         },
       })
       .promise();

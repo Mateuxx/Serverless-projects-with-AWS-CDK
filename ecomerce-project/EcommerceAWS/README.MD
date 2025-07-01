@@ -56,7 +56,7 @@
 ### start a cdk project
 
 ```bash
-cdk init --language typescript
+cdk init app --language typescript
 ```
 
 ### CDK deploy sem interrupção de approval
@@ -101,8 +101,21 @@ cdk init --language typescript
 ## SSM Parameter Store 
 
 - Um lugar seguro para guardar vários tipos de informações dentro da AWS.
+- Assim não crio dependencias entre stacks e consigo compartilhar informações entre stacks.
+  - exemplo: 
+    - uma stack de produtos pode pegar o nome do bucket de imagens de uma stack de imagens
+    - compartilhar chaves de API, senhas, ARNs(Amazon Resource Names), etc.
 
 ## ARN (Amazon Resource Name)
 
 - Identificador único de qualquer recurso dentro da AWS
 - id de um lambda, nome de um bucket
+-  Exemplo: 
+  - arn:aws:lambda:us-east-1:123456789012:function:my-function
+
+### Execution Role  
+- Permissões que uma função lambda tem para acessar outros recursos da AWS
+- permissões que um recurso tem para operar dentro da AWS
+  - exemplo:
+    - DynamoDb tem que ter a permissão de ler e escrever em uma tabela, ou somente leitura
+- **Essas permissões são definidas por uma política de IAM (Identity and Access Management)**
