@@ -21,3 +21,19 @@
    3. Erros:
       1. 404 not found - n achei o produto com esse id
 3. **Outras operações futuras**
+
+### Como usuario de produto eu quero(nem todos os endpoints estão implementados ainda):
+
+1. Apenas fazer uma busca por produtos
+2. Buscar um produto pelo seu id
+   1. GET - product/{productID}
+   2. Erros:
+      1. 404 not found - n achei o produto com esse id
+3. Buscar todos os produtos
+   1. GET - products
+   2. Erros:   
+      1. 404 not found - n achei nenhum produto
+4. Buscar produtos por nome
+   1. GET - products?name={productName}
+   2. Erros:
+      1. 404 not found - n achei nenhum produto com esse nome  

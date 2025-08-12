@@ -5,6 +5,10 @@ import * as lambdaNodeJS from "aws-cdk-lib/aws-lambda-nodejs";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
+//interface para a stack de produtos para receber eventsDdb agora ProductAppStack tem receber eventsDdb
+
+
+
 //stack related to the products resources
 export class ProductsAppStack extends Stack {
   // referencia da lambda dentro dessa stack

@@ -19,7 +19,7 @@
 - Obviamente isso deve ser configurado
   - uma tabela de de um database geralmente não é excluido
 
-## Lambda 
+## Lambda
 
 - funções que são executados a partir de um trigger
 - Excução em runtime
@@ -35,7 +35,27 @@
   - melhorando desempenho
   - cold start otimizado e afins
 
-### AWS API GATEWAY 
+### Invocação de uma função Lambda
+
+#### Invocações síncronas
+
+- A função é chamada e espera a resposta antes de continuar
+- Exemplo:
+  - **API Gateway** chama uma função Lambda e espera a resposta para retornar ao cliente
+  - **Lambda** chama outra Lambda e espera a resposta antes de continuar
+
+### Invocações assíncronas
+
+- A função é chamada e não espera a resposta antes de continuar
+- Exemplo:
+  - **SQS** envia uma mensagem para uma fila e não espera a resposta
+  - **SNS** envia uma mensagem para um tópico e não espera a resposta
+  - **Lambda** chama outra Lambda e não espera a resposta antes de continuar
+  - **DynamoDb**
+    - quando um item é adicionado, atualizado ou excluído, um evento é gerado e enviado para uma fila SQS ou SNS
+    - a função Lambda é acionada para processar esse evento
+
+### AWS API GATEWAY
 
 - colocamos na frente de serviços que expoe APIS para o mundo externo
   - endpoit para ser consumido algum CLIENT
@@ -50,8 +70,7 @@
 - Bloqueio de requisições que nossa infra não trata
   - ja eh bloqueado pela API gateway
 
-
-## CDK 
+## CDK
 
 ### start a cdk project
 
@@ -70,7 +89,6 @@ cdk init app --language typescript
 ```bash
  cdk diff
  ```
-
 
 ### CDK WORKFLOW
 
@@ -93,7 +111,7 @@ cdk init app --language typescript
 
 ![alt text](image-2.png)
 
-### Pq usar diferentes lambdas? se tratando de produtos? 
+### Pq usar diferentes lambdas? se tratando de produtos?
 
 - user apenas vão fazer operações de get
 - admin pode fazer mtas mais operações porem com mto menos frequencia do que um usuario
@@ -102,7 +120,7 @@ cdk init app --language typescript
 
 - Um lugar seguro para guardar vários tipos de informações dentro da AWS.
 - Assim não crio dependencias entre stacks e consigo compartilhar informações entre stacks.
-  - exemplo: 
+  - exemplo:
     - uma stack de produtos pode pegar o nome do bucket de imagens de uma stack de imagens
     - compartilhar chaves de API, senhas, ARNs(Amazon Resource Names), etc.
 
@@ -110,12 +128,20 @@ cdk init app --language typescript
 
 - Identificador único de qualquer recurso dentro da AWS
 - id de um lambda, nome de um bucket
--  Exemplo: 
-  - arn:aws:lambda:us-east-1:123456789012:function:my-function
+- Exemplo:
+- arn:aws:lambda:us-east-1:123456789012:function:my-function
 
 ### Execution Role  
+
 - Permissões que uma função lambda tem para acessar outros recursos da AWS
 - permissões que um recurso tem para operar dentro da AWS
   - exemplo:
     - DynamoDb tem que ter a permissão de ler e escrever em uma tabela, ou somente leitura
 - **Essas permissões são definidas por uma política de IAM (Identity and Access Management)**
+
+## Geração de eventos de Produtos
+
+- Quando um produto é criado, atualizado ou excluído, um evento é gerado.
+- Esses eventos podem ser capturados por outras funções Lambda ou serviços da AWS.
+- Isso permite a criação de fluxos de trabalho assíncronos e reativos
+![alt text](image-3.png)
